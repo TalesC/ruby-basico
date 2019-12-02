@@ -1,3 +1,8 @@
+def avisa_pontos_totais ponto_totais
+    puts "Você possui #{ponto_totais} pontos."
+end
+
+
 def avisa_chute_efetuado (chute)
     puts "\nVocê ja chutou #{chute}"
 end
@@ -28,11 +33,14 @@ def dar_boas_vindas
     nome = gets.strip
     puts "\n\n\n\n\n\n"
     puts "Começaremos o jogo para você, #{nome}"
+    nome
 end
 
-def escolhe_palavra_secreta
+def avisa_escolhendo_palavra 
     puts "Escolhendo uma palavra secreta..."
-    palavra_secreta = "programador"
+end
+
+def avisa_palavra_escolhida palavra_secreta
     puts "Palavra secreta com #{palavra_secreta.size} letras ... boa sorte!"
     palavra_secreta
 end
@@ -52,7 +60,7 @@ end
 
 def pede_um_chute
     puts "Entre com uma letra ou uma palavra!"
-    chute = gets.strip
+    chute = gets.strip.downcase
     puts "Será que acertou? Você chutou #{chute}"
     chute
 end

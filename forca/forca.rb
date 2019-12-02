@@ -12,6 +12,11 @@
 
 require_relative 'ui'
 
+def salva_rank (nome, pontos_totais)
+    conteudo = "#{nome}\n#{pontos_totais}"
+    File.write "rank.txt", conteudo
+end
+
 def chutou_uma_letra? (chute) 
     chute.size == 1
 end
@@ -55,16 +60,42 @@ def palavra_mascarada (palavra_secreta, chutes)
     mascara
 end
 
+def escolhe_palavra_secreta
+    avisa_escolhendo_palavra
 
-def joga(nome) 
-    palavra_secreta = escolhe_palavra_secreta
+    texto = File.read("dicionario.txt")
+    todas_as_palavras = texto.split "\n"
+    numero_aleatorio = rand(todas_as_palavras.size)
+    palavra_secreta = todas_as_palavras[numero_aleatorio].downcase
     
+    avisa_palavra_escolhida palavra_secreta
+end
+
+def escolhe_palavra_secreta_sem_consumir_muita_memoria
+    avisa_escolhendo_palavra
+
+    arquivo = File.new("dicionario.txt")
+    puts "###################################"
+    puts arquivo.gets.to_i
+
+    quantidade_de_palavras = arquivo.gets.to_i
+    numero_aleatorio = rand(quantidade_de_palavras)
+    for linha in 1..(numero_aleatorio -1)
+        arquivo.gets
+    end
+    palavra_secreta = arquivo.gets.strip.downcase    
+    arquivo.close
+    
+    avisa_palavra_escolhida palavra_secreta
+end
+
+def joga  
     erros = 0
     chutes = []
     pontos_ate_agora = 0
 
     while erros < 5 
-        
+        palavra_secreta = escolhe_palavra_secreta_sem_consumir_muita_memoria
         mascara = palavra_mascarada palavra_secreta, chutes
         chute = pede_um_chute_valido chutes, erros, mascara
         chutes << chute
@@ -85,14 +116,17 @@ def joga(nome)
         end
     end
     avisa_pontos pontos_ate_agora
-
+    pontos_ate_agora
 end
 
 def jogo_da_forca
     nome = dar_boas_vindas
+    pontos_totais = 0
 
     loop do
-        joga nome    
+        pontos_totais += joga
+        avisa_pontos_totais pontos_totais
+        salva_rank nome, pontos_totais
         break if nao_que_jogar
     end
 end
