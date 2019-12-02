@@ -1,2 +1,2 @@
 # ruby-basico
-Games created with ruby's basics.
+Algoritimos criados com o básico de Ruby
