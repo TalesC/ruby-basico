@@ -75,15 +75,12 @@ def escolhe_palavra_secreta_sem_consumir_muita_memoria
     avisa_escolhendo_palavra
 
     arquivo = File.new("dicionario.txt")
-    puts "###################################"
-    puts arquivo.gets.to_i
-
-    quantidade_de_palavras = arquivo.gets.to_i
+    quantidade_de_palavras = arquivo.readlines.size
     numero_aleatorio = rand(quantidade_de_palavras)
-    for linha in 1..(numero_aleatorio -1)
-        arquivo.gets
-    end
-    palavra_secreta = arquivo.gets.strip.downcase    
+    arquivo.close
+
+    arquivo = File.new("dicionario.txt")
+    palavra_secreta = arquivo.readlines[numero_aleatorio].strip.downcase    
     arquivo.close
     
     avisa_palavra_escolhida palavra_secreta
@@ -94,8 +91,9 @@ def joga
     chutes = []
     pontos_ate_agora = 0
 
+    palavra_secreta = escolhe_palavra_secreta_sem_consumir_muita_memoria
+
     while erros < 5 
-        palavra_secreta = escolhe_palavra_secreta_sem_consumir_muita_memoria
         mascara = palavra_mascarada palavra_secreta, chutes
         chute = pede_um_chute_valido chutes, erros, mascara
         chutes << chute
