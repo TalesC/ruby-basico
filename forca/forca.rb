@@ -11,11 +11,8 @@
 # end
 
 require_relative 'ui'
+require_relative 'rank'
 
-def salva_rank (nome, pontos_totais)
-    conteudo = "#{nome}\n#{pontos_totais}"
-    File.write "rank.txt", conteudo
-end
 
 def chutou_uma_letra? (chute) 
     chute.size == 1
@@ -74,12 +71,12 @@ end
 def escolhe_palavra_secreta_sem_consumir_muita_memoria
     avisa_escolhendo_palavra
 
-    arquivo = File.new("dicionario.txt")
+    arquivo = File.open("dicionario.txt")
     quantidade_de_palavras = arquivo.readlines.size
     numero_aleatorio = rand(quantidade_de_palavras)
     arquivo.close
 
-    arquivo = File.new("dicionario.txt")
+    arquivo = File.open("dicionario.txt")
     palavra_secreta = arquivo.readlines[numero_aleatorio].strip.downcase    
     arquivo.close
     
@@ -120,11 +117,18 @@ end
 def jogo_da_forca
     nome = dar_boas_vindas
     pontos_totais = 0
+    campeao = le_rank
+
+    avisa_campeao_atual campeao
 
     loop do
         pontos_totais += joga
         avisa_pontos_totais pontos_totais
-        salva_rank nome, pontos_totais
+
+        if(campeao[1].to_i < pontos_totais) 
+            salva_rank nome, pontos_totais
+        end
+
         break if nao_que_jogar
     end
 end
