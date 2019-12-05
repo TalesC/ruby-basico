@@ -17,6 +17,7 @@ def encontrar_jogador(mapa)
 end
 
 def calcula_nova_posicao (heroi, direcao)
+    heroi = heroi.dup
     case direcao
         when "W"
             heroi[0] -=1
@@ -37,10 +38,10 @@ def posicao_valida? mapa, posisao
     estourou_colunas = posisao[1] < 0 || posisao[1] >= colunas
 
     if estourou_linhas || estourou_colunas
-        false
+        return false
     end
     if mapa[posisao[0]][posisao[1]] == "X"
-        false
+        return false
     end
     true
 end
@@ -52,7 +53,7 @@ def joga (nome)
         desenha mapa
         direcao = pede_movimento
         heroi = encontrar_jogador mapa
-        nova_posicao = calcula_nova_posicao [heroi[0], heroi[1]], direcao
+        nova_posicao = calcula_nova_posicao heroi, direcao
         
         next if !posicao_valida? mapa, nova_posicao
               
