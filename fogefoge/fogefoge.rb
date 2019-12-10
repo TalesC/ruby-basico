@@ -49,26 +49,41 @@ def posicao_valida? mapa, posisao
     true
 end
 
-def move_fantasma mapa, linha, coluna
-    posicoes = posicoes_validas_a_partir_de_mapa [linha, coluna]
-    posisao = [linha, coluna +1]
-    if posicao_valida? mapa, posisao
-        mapa[linha][coluna] = " "
-        mapa[posisao[0]][posisao[1]] = "F"
-    end    
+def posicoes_validas_a_partir_de_mapa mapa, novo_mapa, posicao
+    baixo = [posicao[0] +1, posicao[1]]
+    direita = [posicao[0] , posicao[1] +1]
+    cima = [posicao[0] -1, posicao[1]]
+    esquerda = [posicao[0] , posicao[1] -1]
+
+    posicoes = [baixo, direita, cima, esquerda]
+    posicoes.delete_if{ |p| ((!posicao_valida? mapa, p) || (!posicao_valida? novo_mapa, p)) }
+end
+
+def move_fantasma mapa, novo_mapa, linha, coluna
+    posicoes = posicoes_validas_a_partir_de_mapa mapa, novo_mapa, [linha, coluna]
+    return if posicoes.empty?
+    
+    posicao = posicoes[0]
+    mapa[linha][coluna] = " "
+    novo_mapa[posicao[0]][posicao[1]] = "F"
+end
+
+def copia_mapa mapa
+    novo_mapa = mapa.join("\n").tr("F", " ").split "\n"
 end
 
 def move_fantasmas mapa
     caractere_do_fantasma = "F"
+    novo_mapa = copia_mapa mapa
     mapa.each_with_index do |linha_atual, linha|
         linha_atual.chars.each_with_index do |caractere_atual, coluna|
             eh_fantasma = caractere_atual == caractere_do_fantasma
             if eh_fantasma
-                move_fantasma mapa, linha, coluna
+                move_fantasma mapa, novo_mapa, linha, coluna
             end
         end
     end
-
+    novo_mapa
 end
 
 def joga (nome)
@@ -85,8 +100,8 @@ def joga (nome)
         mapa[heroi[0]][heroi[1]] = " "
         mapa[nova_posicao[0]][nova_posicao[1]] = "H"
 
-        move_fantasmas mapa
-
+        mapa = move_fantasmas mapa
+        
     end
 end
 
