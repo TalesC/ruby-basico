@@ -14,6 +14,7 @@ def encontrar_jogador(mapa)
             return [linha, coluna_heroi]
         end
     end
+    nil
 end
 
 def calcula_nova_posicao (heroi, direcao)
@@ -73,6 +74,10 @@ def copia_mapa mapa
     novo_mapa = mapa.join("\n").tr("F", " ").split "\n"
 end
 
+def jogador_perdeu? mapa
+    perdeu = !(encontrar_jogador mapa)
+end
+
 def move_fantasmas mapa
     caractere_do_fantasma = "F"
     novo_mapa = copia_mapa mapa
@@ -103,6 +108,11 @@ def joga (nome)
 
         mapa = move_fantasmas mapa
         
+        if jogador_perdeu? mapa
+            game_over
+            break
+        end
+
     end
 end
 
